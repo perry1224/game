@@ -1,7 +1,7 @@
 import { InputHandler } from './input.js';
 import { Player } from './player.js';
 import { Background } from './background.js';
-import { FlyingEnemy, ClimbingEnemy, GroundEnemy } from './enemies.js';
+import { FlyingEnemy,  GroundEnemy, ClimbingEnemy} from './enemies.js';
 
 
 window.addEventListener('load', function() {
@@ -47,6 +47,7 @@ class Game {
     })
   }
   addEnemy(){
+    if (this.speed > 0 && Math.random() < 0.5) this.enemies.push(new GroundEnemy(this));
     this.enemies.push(new FlyingEnemy(this))
     console.log(this.enemies)
   }
