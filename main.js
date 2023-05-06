@@ -3,7 +3,7 @@ import { Player } from './player.js';
 import { Background } from './background.js';
 import { FlyingEnemy,  GroundEnemy, ClimbingEnemy} from './enemies.js';
 import { UI } from './UI.js';
-
+import { CollisionAnimation } from "./collisionanimation.js";
 
 window.addEventListener('load', function() {
 const canvas = document.getElementById('canvas1');
@@ -24,10 +24,11 @@ class Game {
     this.UI = new UI(this)
     this.enemies = [];
     this.particles = [];
+    this.collisions = [];
     this.maxParticles = 100;
     this.enemyTimer = 0;
     this.enemyInterval = 1000;
-    this.debug = true;
+    this.debug = false;
     this.score = 0;
     this.fontColor = 'black';
     this.player.currentState = this.player.states[0];
@@ -56,7 +57,11 @@ class Game {
     if (this.particles.length > this.maxParticles) {
       this.particles = this.particles.slice(0, this.maxParticles) //only allow first 50 particles in this array.
     }
-
+    //handle collision sprites
+    this.collisions.forEach((collision, index) => {
+      collision.update(deltaTime)
+      if (collision.markedForDeletion) this.collision.splice(index, 1)
+    })
   }
   draw(context) {
     this.background.draw(context)
@@ -66,6 +71,9 @@ class Game {
     });
     this.particles.forEach(particle => {
       particle.draw(context)
+    })
+    this.collisions.forEach(collision => {
+      collision.draw(context)
     })
     this.UI.draw(context);
   }
