@@ -1,5 +1,6 @@
 import { CollisionAnimation } from "./collisionanimation.js";
 import { Sitting, Running, Jumping, Falling, Rolling, Diving, Hit } from "./playerState.js";
+import { FloatingMessage } from "./floatingMessages.js";
 
 export class Player {
   constructor(game){
@@ -32,8 +33,8 @@ export class Player {
     this.currentState.handleInput(input)
     //horizontal movement
     this.x += this.speed;
-    if(input.includes('ArrowRight')) this.speed = this.maxSpeed;
-    else if (input.includes('ArrowLeft')) this.speed = -this.maxSpeed;
+    if(input.includes('ArrowRight') && this.currentState !== this.states[6]) this.speed = this.maxSpeed;
+    else if (input.includes('ArrowLeft') && this.currentState !== this.states[6]) this.speed = -this.maxSpeed;
     else this.speed = 0;
     //horinzal boundaries
     if (this.x < 0) this.x = 0;
@@ -82,8 +83,11 @@ export class Player {
         this.game.collisions.push(new CollisionAnimation(this.game, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5))
         if (this.currentState === this.states[4] || this.currentState === this.states[5]) {
         this.game.score++; 
+        this.game.floatingMessages.push(new FloatingMessage('+1', enemy.x, enemy.y, 0, 0))
       } else {
         this.setState(6, 0) //Hit is 6th array, movement will be 0 if hit
+        this.game.lives --;
+        if (this.game.lives <= 0) this.game.gameOver = true;
       }
   }})
   }
