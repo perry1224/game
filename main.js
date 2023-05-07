@@ -3,12 +3,12 @@ import { Player } from './player.js';
 import { Background } from './background.js';
 import { FlyingEnemy,  GroundEnemy, ClimbingEnemy} from './enemies.js';
 import { UI } from './UI.js';
-import { CollisionAnimation } from "./collisionanimation.js";
+// import { CollisionAnimation } from "./collisionanimation.js";
 
 window.addEventListener('load', function() {
 const canvas = document.getElementById('canvas1');
 const ctx = canvas.getContext('2d');
-canvas.width = 500;
+canvas.width = 900;
 canvas.height = 500;
 
 class Game {
@@ -31,9 +31,10 @@ class Game {
     this.enemyInterval = 1000;
     this.debug = false;
     this.score = 0;
+    this.winningScore = 30;
     this.fontColor = 'black';
     this.time = 0;
-    this.maxTime = 10000;
+    this.maxTime = 25000;
     this.gameOver = false;
     this.lives = 5;
     this.player.currentState = this.player.states[0];
@@ -53,7 +54,7 @@ class Game {
     }
     this.enemies.forEach(enemy => {
       enemy.update(deltaTime)
-      if(enemy.markedForDeletion) this.enemies.splice(this.enemies.indexOf(enemy), 1)
+
     });
     //handle messages
     this.floatingMessages.forEach(message => {
@@ -62,9 +63,7 @@ class Game {
     //handle particles
     this.particles.forEach((particle, index) => {
       particle.update();
-      if (particle.markedForDeletion) this.particles.splice(index, 1)
-
-
+   
     });
     if (this.particles.length > this.maxParticles) {
       this.particles.length = this.maxParticles //only allow first 50 particles in this array.
@@ -72,8 +71,11 @@ class Game {
     //handle collision sprites
     this.collisions.forEach((collision, index) => {
       collision.update(deltaTime)
-      if (collision.markedForDeletion) this.collision.splice(index, 1)
     })
+
+    this.enemies = this.enemies.filter(enemy => !enemy.markedForDeletion);
+    this.particles = this.particles.filter(particle => !particle.markedForDeletion);
+    this.collisions = this.collisions.filter(collision => !collision.markedForDeletion)
   }
   draw(context) {
     this.background.draw(context)

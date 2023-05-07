@@ -27,6 +27,7 @@ export class Player {
                   new Rolling(this.game), new Diving(this.game),
                   new Hit(this.game)
                 ];
+    this.currentState = null;
   }
   update(input, deltaTime) {
     this.checkCollision()
@@ -83,9 +84,10 @@ export class Player {
         this.game.collisions.push(new CollisionAnimation(this.game, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5))
         if (this.currentState === this.states[4] || this.currentState === this.states[5]) {
         this.game.score++; 
-        this.game.floatingMessages.push(new FloatingMessage('+1', enemy.x, enemy.y, 0, 0))
+        this.game.floatingMessages.push(new FloatingMessage('+1', enemy.x, enemy.y, 150, 50))
       } else {
         this.setState(6, 0) //Hit is 6th array, movement will be 0 if hit
+        this.game.score -=3;
         this.game.lives --;
         if (this.game.lives <= 0) this.game.gameOver = true;
       }
