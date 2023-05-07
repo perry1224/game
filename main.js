@@ -3,7 +3,6 @@ import { Player } from './player.js';
 import { Background } from './background.js';
 import { FlyingEnemy,  GroundEnemy, ClimbingEnemy} from './enemies.js';
 import { UI } from './UI.js';
-// import { CollisionAnimation } from "./collisionanimation.js";
 
 window.addEventListener('load', function() {
 const canvas = document.getElementById('canvas1');
